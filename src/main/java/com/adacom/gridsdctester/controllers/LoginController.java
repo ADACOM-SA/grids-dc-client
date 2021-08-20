@@ -1,24 +1,23 @@
 package com.adacom.gridsdctester.controllers;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.util.JSONArrayUtils;
 import com.nimbusds.openid.connect.sdk.OIDCClaimsRequest;
 import com.nimbusds.openid.connect.sdk.assurance.claims.VerifiedClaimsSetRequest;
 import com.nimbusds.openid.connect.sdk.claims.DistributedClaims;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 import eu.grids.sdk.service.Impl.GRIDSIssuer;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
-import java.util.List;
+
 import java.util.Set;
 
 /**
@@ -31,12 +30,20 @@ public class LoginController {
     private GRIDSIssuer gridsIssuer;
 
     @RequestMapping(value = "")
-    public String index(Model model) {
+    public String index(Model model) throws ParseException {
+
+        //String evidenceStr = "[{\"type\":{\"value\":\"company_register\"},\"registry\":{\"organisation\":{\"essential\":false,\"purpose\":\"string\"},\"country\":{\"essential\":true,\"purpose\":\"string\",\"value\":\"ES\"}},\"time\":{\"max_age\":31000000,\"essential\":true,\"purpose\":\"string\"},\"data\":{\"essential\":true,\"purpose\":\"string\"},\"extractURL\":{\"essential\":true,\"purpose\":\"string\"},\"document\":{\"SKU\":{\"essential\":false,\"purpose\":\"string\"},\"option\":{\"essential\":false,\"purpose\":\"string\"}}}]";
+        String evidenceStr = "[{\"type\":{\"value\":\"company_register\"},\"registry\":{\"organisation\":{\"essential\":false,\"purpose\":\"string\"},\"country\":{\"essential\":true,\"purpose\":\"string\",\"value\":\"AT\"}}}]";
+
+
+        JSONArray evidence = JSONArrayUtils.parse(evidenceStr);
 
 
         JSONObject verification = new JSONObject();
         verification.put("trust_framework", "grids_kyb");
         verification.put("userinfo_endpoint", "https://dp.kompany.com:8050/userinfo");
+        verification.put("evidence", evidence);
+
 
         JSONObject idVerification = new JSONObject();
         idVerification.put("trust_framework", "eidas");
@@ -72,11 +79,11 @@ public class LoginController {
                 );
 
 
-        claims.getIDTokenVerifiedClaimsRequestList().add(new VerifiedClaimsSetRequest())
 
 
 
-        model.addAttribute("loginUrl", gridsIssuer.getAuthorizationUrl(claims));
+
+        model.addAttribute("loginUrl", gridsIssuer.getAuthorizationUrl(claims)+"&legal_person_identifier=375715X&legal_name=360Kompany AG");
 
         return "index";
     }
@@ -115,6 +122,8 @@ public class LoginController {
             return "error";
         }
 
+        model.addAttribute("idToken", tokens.getIDTokenString());
+
         UserInfo userInfo = gridsIssuer.getUserInfo(tokens.getAccessToken().getValue());
 
         if (userInfo == null)
@@ -126,13 +135,17 @@ public class LoginController {
         Set<DistributedClaims> set = userInfo.getDistributedClaims();
         for (DistributedClaims claims : set) {
 
-            UserInfo dpUserInfo = gridsIssuer.getDPUserInfo(claims.getSourceEndpoint(), claims.getAccessToken().toString());
+            String token = claims.getAccessToken().toString();
 
-            if (dpUserInfo == null)
-            {
-                model.addAttribute("errorMessage", "There was an issue with getting dp user info");
-                return "error";
-            }
+            model.addAttribute("dpToken", token);
+
+//            UserInfo dpUserInfo = gridsIssuer.getDPUserInfo(claims.getSourceEndpoint(), claims.getAccessToken().toString());
+
+//            if (dpUserInfo == null)
+//            {
+//                model.addAttribute("errorMessage", "There was an issue with getting dp user info");
+//                return "error";
+//            }
         }
         return "index";
     }

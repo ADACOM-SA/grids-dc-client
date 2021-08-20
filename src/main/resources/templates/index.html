@@ -12,5 +12,28 @@
 <br/>
 <br/>
 
+
+<div th:if="${idToken}">
+    <hr/>
+    Id token:
+    <div th:text="${idToken}"></div>
+</div>
+
+
+
+<div th:if="${dpToken}">
+    <hr/>
+    Data Provider token:
+    <div th:text="${dpToken}"></div>
+</div>
+
+
+
+<div th:if="${errorMessage}">
+    <hr/>
+    Error:
+    <div th:text="${errorMessage}"></div>
+</div>
+
 </body>
 </html>
