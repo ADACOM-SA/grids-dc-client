@@ -26,7 +26,7 @@ public class ClientManagementController {
     @Autowired
     GRIDSClientManager gridsClientManager;
 
-    private String masterToken = "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NDdiMzRmNy02YmZjLTRhODgtODgxYS0wYjlhNWQ3NjZmOTgifQ.eyJleHAiOjE2Mjk1NDAyNzQsImlhdCI6MTYyMDkwMDI3NCwianRpIjoiMDNlNThjZDYtYzhmMi00M2Q2LThiMTEtNWIzMzZiNzhjMTNlIiwiaXNzIjoiaHR0cHM6Ly92bS5wcm9qZWN0LWdyaWRzLmV1OjgxODAvYXV0aC9yZWFsbXMvZ3JpZHMiLCJhdWQiOiJodHRwczovL3ZtLnByb2plY3QtZ3JpZHMuZXU6ODE4MC9hdXRoL3JlYWxtcy9ncmlkcyIsInR5cCI6IkluaXRpYWxBY2Nlc3NUb2tlbiJ9.2_1E8938Ofa8nuN1oYo4Xq9j3s-2_Fm9oJ2x_pJlo20";
+    private String masterToken = "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3NDdiMzRmNy02YmZjLTRhODgtODgxYS0wYjlhNWQ3NjZmOTgifQ.eyJleHAiOjAsImlhdCI6MTYzMDMyNTk1MiwianRpIjoiODI4YjIxMjMtNmRmZi00NzZmLWE3NzctNDNhNmJkOTkxZmMyIiwiaXNzIjoiaHR0cHM6Ly92bS5wcm9qZWN0LWdyaWRzLmV1OjgxODAvYXV0aC9yZWFsbXMvZ3JpZHMiLCJhdWQiOiJodHRwczovL3ZtLnByb2plY3QtZ3JpZHMuZXU6ODE4MC9hdXRoL3JlYWxtcy9ncmlkcyIsInR5cCI6IkluaXRpYWxBY2Nlc3NUb2tlbiJ9.kzWQXIVPxtyWhTYyleH4Fjk8RtjYq5kr1d0m-Z-zJxw";
 
 
     @RequestMapping(value = "register")
@@ -37,8 +37,8 @@ public class ClientManagementController {
         clientMetadata.setName("Adacom test");
         clientMetadata.setGrantTypes(Collections.singleton(GrantType.AUTHORIZATION_CODE));
         clientMetadata.setRedirectionURI(URI.create("http://localhost:8080/callback"));
-        clientMetadata.setJWKSetURI(new URI("https://vm.project-grids.eu:8180/auth/realms/grids/protocol/openid-connect/certs"));
-
+        clientMetadata.setJWKSetURI(new URI("http://34ac-5-55-117-249.ngrok.io/jwks"));
+        //https://vm.project-grids.eu:8180/auth/realms/grids/protocol/openid-connect/certs
 
         ClientInformation clientInformation = gridsClientManager.registerClient(clientMetadata, masterToken);
 

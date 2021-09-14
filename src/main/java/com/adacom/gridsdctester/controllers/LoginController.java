@@ -1,5 +1,6 @@
 package com.adacom.gridsdctester.controllers;
 
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.util.JSONArrayUtils;
 import com.nimbusds.openid.connect.sdk.OIDCClaimsRequest;
@@ -11,9 +12,12 @@ import eu.grids.sdk.service.Impl.GRIDSIssuer;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -139,13 +143,35 @@ public class LoginController {
 
             model.addAttribute("dpToken", token);
 
-//            UserInfo dpUserInfo = gridsIssuer.getDPUserInfo(claims.getSourceEndpoint(), claims.getAccessToken().toString());
 
-//            if (dpUserInfo == null)
-//            {
-//                model.addAttribute("errorMessage", "There was an issue with getting dp user info");
-//                return "error";
-//            }
+//
+//            WebClient client = WebClient.create();
+//
+//            String body = "717ca0c9-f7bb-45da-a1be-fa0c55ba106b";
+//
+//            String iToken ="eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbIlJPTEVfVVNFUiJdLCJzdWIiOiI3MTdjYTBjOS1mN2JiLTQ1ZGEtYTFiZS1mYTBjNTViYTEwNmIiLCJpYXQiOjE2MzAzMjE5NzksImV4cCI6MTYzMDM1MDc3OX0.RYhPLXpOuKrbAVGRU7lOC9fYH58ba6p1IF01vgYj3Hrms61GcUGQDZY8siJEC8sdUa0iSk5wordlZEFxKddS0Q";
+//
+//            String response2 = client.post()
+//                    .uri( "https://vm.project-grids.eu:8481/dpc/dcIntrospection" )
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .headers(headers -> headers.setBearerAuth(iToken))
+//                    .bodyValue(body)
+//                    .exchange()
+//                    .block()
+//                    .bodyToMono(String.class)
+//                    .block();
+
+
+            UserInfo dpUserInfo = gridsIssuer.getDPUserInfo(claims.getSourceEndpoint(), claims.getAccessToken().toString());
+
+
+
+
+            if (dpUserInfo == null)
+            {
+                model.addAttribute("errorMessage", "There was an issue with getting dp user info");
+                return "error";
+            }
         }
         return "index";
     }
