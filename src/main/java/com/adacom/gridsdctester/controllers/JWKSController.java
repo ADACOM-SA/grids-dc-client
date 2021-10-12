@@ -49,7 +49,6 @@ public class JWKSController {
     @RequestMapping(value = "")
     public Map<String, Object> index() throws ParseException, NoSuchAlgorithmException {
 
-
         // Convert to JWK format
         JWK jwk = new RSAKey.Builder((RSAPublicKey)keyPair.getPublic())
                 .privateKey((RSAPrivateKey)keyPair.getPrivate())

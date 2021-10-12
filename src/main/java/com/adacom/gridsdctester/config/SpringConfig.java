@@ -1,26 +1,19 @@
 package com.adacom.gridsdctester.config;
 
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.KeyUse;
-import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import eu.grids.sdk.service.Impl.GRIDSClientManager;
 import eu.grids.sdk.service.Impl.GRIDSIssuer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
 
 /**
  * Create by szamanis - Adacom S.A.
@@ -32,21 +25,24 @@ public class SpringConfig {
     @Autowired
     private Environment env;
 
-    @Bean
-    public GRIDSIssuer gridsIssuer() throws URISyntaxException {
+    @Bean("gridsIssuer")
+    @DependsOn({"jwksKeys"})
+    public GRIDSIssuer gridsIssuer(@Autowired() KeyPair keyPair) throws URISyntaxException {
 
         GRIDSIssuer issuer = new GRIDSIssuer(
-                new URI("https://vm.project-grids.eu:8180/auth/realms/grids/"),
-                "c898f3a0-f659-487f-ba29-25114a8c8dee",
-                "7bf69e58-9763-4032-b3ae-bbd284e0356c",
-                new URI("http://localhost:8080/callback")
+                new URI(env.getProperty("DCC_URI")),
+                env.getProperty("DC_CLIENT_ID"),
+                env.getProperty("DC_CLIENT_SECRET"),
+                new URI(env.getProperty("DC_URL") + "callback"),
+                keyPair
+
         );
 
         return issuer;
 
     }
 
-    @Bean
+    @Bean("jwksKeys")
     public KeyPair keyPair() throws NoSuchAlgorithmException {
 
         KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
@@ -57,10 +53,11 @@ public class SpringConfig {
 
     }
 
-    @Bean
+    @Bean("gridsManager")
+    @DependsOn({"gridsIssuer"})
     public GRIDSClientManager gridsManager() throws URISyntaxException {
 
-        GRIDSIssuer issuer = new GRIDSIssuer(new URI("https://vm.project-grids.eu:8180/auth/realms/grids/"));
+        GRIDSIssuer issuer = new GRIDSIssuer(new URI(env.getProperty("DCC_URI")));
 
         OIDCProviderMetadata metadata = issuer.getOPMetadata();
 
@@ -69,8 +66,5 @@ public class SpringConfig {
         return manager;
 
     }
-
-
-
 
 }

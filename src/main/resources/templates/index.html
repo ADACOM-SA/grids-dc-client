@@ -21,10 +21,24 @@
 
 
 
-<div th:if="${dpToken}">
+<div th:if="${userInfo}">
     <hr/>
-    Data Provider token:
-    <div th:text="${dpToken}"></div>
+    User info:
+    <div th:text="${userInfo}"></div>
+</div>
+
+
+<div th:if="${dpUserInfo0}">
+    <hr/>
+    Data user info:
+    <div th:text="${dpUserInfo0}"></div>
+</div>
+
+
+<div th:if="${dpUserInfo1}">
+    <hr/>
+    Data user info:
+    <div th:text="${dpUserInfo1}"></div>
 </div>
 
 
