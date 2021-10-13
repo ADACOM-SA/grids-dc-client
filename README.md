@@ -2,22 +2,22 @@
 <br />
 <div align="center">
   <a href="https://project-grids.eu">
-    <img src="src/main/resources/images/logo.png" alt="Logo" height="250">
+    <img src="logo.png" alt="Logo" height="250">
   </a>
 
-<h3 align="center">GRIDS Prject SDK</h3>
+<h3 align="center">GRIDS Data Consumer Test Client</h3>
 
   <p align="center">
     increasinG tRust with eId for Developing buSiness
     <br />
-    <a href="/"><strong>Explore the docs »</strong></a>
+    <a href="#usage"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="">View Demo</a>
+    <a href="#">View Demo</a>
     ·
-    <a href="/issues">Report Bug</a>
+    <a href="/../../issues">Report Bug</a>
     ·
-    <a href="/issues">Request Feature</a>
+    <a href="/../../issues">Request Feature</a>
   </p>
 </div>
 
@@ -98,3 +98,4 @@ DC_CLIENT_SECRET=<94705f07...>
 Note: For Data Provider One  you can call https://<your_custom_domain>.loca.lt/2
 and for Data Provider One you can call https://<your_custom_domain>.loca.lt/3
 
+<p align="right">(<a href="#top">back to top</a>)</p>
